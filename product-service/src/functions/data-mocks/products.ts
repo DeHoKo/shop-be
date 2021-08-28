@@ -1,5 +1,4 @@
-import {
-  id: , Product, HandOrientation } from '@my-types/index';
+import { Product, HandOrientation } from '@my-types/index';
 
 const products: Product[] = [
   {
@@ -256,3 +255,5 @@ const products: Product[] = [
     price: 235,
   },
 ];
+
+export default products;
