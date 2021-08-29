@@ -8,7 +8,7 @@ import Products from '../data-mocks/products';
 const hello: ValidatedEventAPIGatewayProxyEvent<undefined> = async (event) => {
   await doYouReallyWantAwait();
   return formatJSONResponse({
-    data: Products,
+    products: Products,
   });
 }
 

@@ -14,11 +14,11 @@ const hello: ValidatedEventAPIGatewayProxyEvent<undefined> = async (event) => {
   const product = Products.find(p => p.id === productId);
   if (product) {
     return formatJSONResponse({
-      data: product,
+      product: product,
     });
   } else {
     return formatJSONResponse({
-      data: 'Product was not found',
+      message: 'Product was not found',
     },
     HttpStatusCode.NOT_FOUND
     );
