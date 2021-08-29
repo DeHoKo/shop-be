@@ -54,6 +54,12 @@ const serverlessConfiguration: AWS = {
                   price: {
                     type: 'number'
                   },
+                  count: {
+                    type: 'number'
+                  },
+                  description: {
+                    type: 'string'
+                  },
                 },
               },
             },
@@ -108,6 +114,12 @@ const serverlessConfiguration: AWS = {
                     },
                     price: {
                       type: 'number'
+                    },
+                    count: {
+                      type: 'number'
+                    },
+                    description: {
+                      type: 'string'
                     },
                   }
                 },

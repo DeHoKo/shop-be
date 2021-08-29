@@ -8,6 +8,8 @@ type Product = {
   handOrientation: HandOrientation,
   imageUrl: string,
   price: number,
+  count: number,
+  description: string,
 };
 
 enum HandOrientation {
