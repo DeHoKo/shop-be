@@ -1,12 +1,11 @@
 import 'source-map-support/register';
 
-import type { ValidatedEventAPIGatewayProxyEvent } from 'src/utils/libs/apiGateway';
-import { formatJSONResponse } from 'src/utils/libs/apiGateway';
-import { middyfy } from 'src/utils/libs/lambda';
+import { formatJSONResponse, ValidatedEventAPIGatewayProxyEvent } from '../../utils/libs/apiGateway';
+import { middyfy } from '../../utils/libs/lambda';
 import Products from '../data-mocks/products';
-import { HttpStatusCode } from '@my-types/index';
+import { HttpStatusCode } from '../../utils/types';
 
-const hello: ValidatedEventAPIGatewayProxyEvent<undefined> = async (event) => {
+export const getProductsById: ValidatedEventAPIGatewayProxyEvent<undefined> = async (event) => {
   // await is here
   await doYouReallyWantAwait();
 
@@ -28,4 +27,4 @@ const hello: ValidatedEventAPIGatewayProxyEvent<undefined> = async (event) => {
 
 const doYouReallyWantAwait = async () => Promise.resolve();
 
-export const main = middyfy(hello);
+export const main = middyfy(getProductsById);

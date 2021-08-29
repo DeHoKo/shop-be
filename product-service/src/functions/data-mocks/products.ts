@@ -1,8 +1,8 @@
-import { Product, HandOrientation } from '@my-types/index';
+import { Product, HandOrientation } from '../../utils/types';
 
 const products: Product[] = [
   {
-    id:'66236ec1-c794-4e2e-a195-dd719b47e55b' ,
+    id: '66236ec1-c794-4e2e-a195-dd719b47e55b',
     title: 'Archery Dragon X8',
     brand: 'Sanlida',
     color: 'Camo Pro',
