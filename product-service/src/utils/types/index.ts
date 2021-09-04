@@ -1,20 +1,10 @@
 type Product = {
   id: string,
   title: string,
-  brand: string,
-  color: string,
-  material: string,
-  weight: number,
-  handOrientation: HandOrientation,
+  description: string,
   imageUrl: string,
   price: number,
   count: number,
-  description: string,
-};
-
-enum HandOrientation {
-  leftHand = 'Left Hand',
-  rightHand = 'Right Hand'
 };
 
 enum HttpStatusCode {
@@ -24,6 +14,5 @@ enum HttpStatusCode {
 
 export {
   Product,
-  HandOrientation,
   HttpStatusCode,
 };
