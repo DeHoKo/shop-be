@@ -1,6 +1,7 @@
 import { APIGatewayProxyEvent, Context, Callback } from 'aws-lambda';
 import { getProductsById } from '../handler';
 import Products from '../../data-mocks/products';
+import { HttpStatusCode } from '../../../utils/types';
 
 describe('Tests for get product by id', () => {
   it('should return a product when the existing id is provided', async () => {
@@ -26,13 +27,11 @@ describe('Tests for get product by id', () => {
         productId: '111-111-111-111',
       }
     } as unknown as APIGatewayProxyEvent;
-    const returnedValue = {
-      statusCode: 404,
-      body: JSON.stringify({ 
+    await expect(getProductsById(eventObject, {} as Context, {} as Callback))
+      .rejects
+      .toMatchObject({
+        statusCode: HttpStatusCode.NOT_FOUND,
         message: 'Product was not found',
-      }),
-    };
-    const response = await getProductsById(eventObject, {} as Context, {} as Callback);
-    expect(response).toEqual(returnedValue);
+      });
   })
 });
