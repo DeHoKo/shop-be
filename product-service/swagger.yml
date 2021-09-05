@@ -1,0 +1,97 @@
+---
+swagger: "2.0"
+info:
+  description: "Products API"
+  version: "2021-08-29T11:06:23Z"
+  title: "product-service-dev"
+host: "8mig3ki3mb.execute-api.eu-west-1.amazonaws.com"
+basePath: "/dev"
+schemes:
+- "https"
+paths:
+  /products:
+    get:
+      description: "Get products"
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "200 response"
+          schema:
+            $ref: "#/definitions/GetProducts"
+  /products/{productId}:
+    get:
+      description: "Get product by id"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "productId"
+        in: "path"
+        description: "Id of the product you want to get"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "200 response"
+          schema:
+            $ref: "#/definitions/GetProductByIdResponse"
+        "404":
+          description: "404 response"
+          schema:
+            $ref: "#/definitions/GetProductByIdNotFoundResponse"
+definitions:
+  GetProducts:
+    type: "object"
+    properties:
+      products:
+        type: "array"
+        items:
+          type: "object"
+          properties:
+            color:
+              type: "string"
+            material:
+              type: "string"
+            price:
+              type: "number"
+            imageUrl:
+              type: "string"
+            weight:
+              type: "number"
+            id:
+              type: "string"
+            handOrientation:
+              type: "string"
+            title:
+              type: "string"
+            brand:
+              type: "string"
+  GetProductByIdResponse:
+    type: "object"
+    properties:
+      product:
+        type: "object"
+        properties:
+          color:
+            type: "string"
+          material:
+            type: "string"
+          price:
+            type: "number"
+          imageUrl:
+            type: "string"
+          weight:
+            type: "number"
+          id:
+            type: "string"
+          handOrientation:
+            type: "string"
+          title:
+            type: "string"
+          brand:
+            type: "string"
+  GetProductByIdNotFoundResponse:
+    type: "object"
+    properties:
+      message:
+        type: "string"
