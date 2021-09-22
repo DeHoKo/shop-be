@@ -2,29 +2,29 @@ import 'source-map-support/register';
 
 import { formatJSONResponse, ValidatedEventAPIGatewayProxyEvent } from '../../utils/libs/apiGateway';
 import { middyfy } from '../../utils/libs/lambda';
-import Products from '../data-mocks/products';
 import { HttpStatusCode } from '../../utils/types';
+import httpError from 'http-errors';
+import { Client, dbOptions } from '../../utils/libs/db';
+import { createSelectProductByIdQuery } from '../../utils/queries';
 
 export const getProductsById: ValidatedEventAPIGatewayProxyEvent<undefined> = async (event) => {
-  // await is here
-  await doYouReallyWantAwait();
-
   const productId = event?.pathParameters?.productId;
-  const product = Products.find(p => p.id === productId);
-  if (product) {
+  const client = new Client(dbOptions);
+  await client.connect();
+  try {
+    const { rows: products } = await client.query(createSelectProductByIdQuery(productId));
+    const product = products[0];
+    if (!product) {
+      throw httpError(HttpStatusCode.NOT_FOUND, 'Product was not found');
+    }
     return formatJSONResponse({
       product: product,
     });
-  } else {
-    return formatJSONResponse({
-      message: 'Product was not found',
-    },
-    HttpStatusCode.NOT_FOUND
-    );
-  }
-  
+  } catch(e) {
+    throw Error(`Something went wrong. Error ${e}`);
+  } finally {
+    client.end();
+  };
 };
-
-const doYouReallyWantAwait = async () => Promise.resolve();
 
 export const main = middyfy(getProductsById);

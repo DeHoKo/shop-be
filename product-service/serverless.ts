@@ -1,7 +1,11 @@
 import type { AWS } from '@serverless/typescript';
+import dotenv from 'dotenv';
 
 import getProductsList from '@functions/get-products-list';
 import getProductsById from '@functions/get-products-by-id';
+import postProduct from '@functions/post-product';
+
+dotenv.config();
 
 const serverlessConfiguration: AWS = {
   service: 'product-service',
@@ -31,21 +35,6 @@ const serverlessConfiguration: AWS = {
                     type: 'string'
                   },
                   title: {
-                    type: 'string'
-                  },
-                  brand: {
-                    type: 'string'
-                  },
-                  color: {
-                    type: 'string'
-                  },
-                  material: {
-                    type: 'string'
-                  },
-                  weight: {
-                    type: 'number'
-                  },
-                  handOrientation: {
                     type: 'string'
                   },
                   imageUrl: {
@@ -94,21 +83,6 @@ const serverlessConfiguration: AWS = {
                     title: {
                       type: 'string'
                     },
-                    brand: {
-                      type: 'string'
-                    },
-                    color: {
-                      type: 'string'
-                    },
-                    material: {
-                      type: 'string'
-                    },
-                    weight: {
-                      type: 'number'
-                    },
-                    handOrientation: {
-                      type: 'string'
-                    },
                     imageUrl: {
                       type: 'string'
                     },
@@ -143,11 +117,16 @@ const serverlessConfiguration: AWS = {
     },
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
+      PG_HOST: process.env.PG_HOST,
+      PR_PORT: process.env.PR_PORT,
+      PG_DATABASE: process.env.PG_DATABASE,
+      PG_USERNAME: process.env.PG_USERNAME,
+      PG_PASSWORD: process.env.PG_PASSWORD,
     },
     lambdaHashingVersion: '20201221',
   },
   // import the function via paths
-  functions: { getProductsList, getProductsById },
+  functions: { getProductsList, getProductsById, postProduct },
 };
 
 module.exports = serverlessConfiguration;

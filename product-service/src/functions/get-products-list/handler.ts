@@ -2,15 +2,22 @@ import 'source-map-support/register';
 
 import { formatJSONResponse, ValidatedEventAPIGatewayProxyEvent } from '../../utils/libs/apiGateway';
 import { middyfy } from '../../utils/libs/lambda';
-import Products from '../data-mocks/products';
+import { Client, dbOptions } from '../../utils/libs/db';
+import { createSelectAllProductsQuery } from '../../utils/queries';
 
 export const getProducts: ValidatedEventAPIGatewayProxyEvent<undefined> = async () => {
-  await doYouReallyWantAwait();
-  return formatJSONResponse({
-    products: Products,
-  });
+  const client = new Client(dbOptions);
+  await client.connect();
+  try {
+    const { rows: products } = await client.query(createSelectAllProductsQuery());
+    return formatJSONResponse({
+      products,
+    });
+  } catch(e) {
+    throw Error(`Something went wrong. Error ${e}`);
+  } finally {
+    client.end();
+  };
 }
-
-const doYouReallyWantAwait = async () => Promise.resolve();
 
 export const main = middyfy(getProducts);
