@@ -19,7 +19,6 @@ const importProductsFile = async (event) => {
   const client = new S3Client({ region: 'eu-west-1' });
   const command = new PutObjectCommand(params);
   const url = await getSignedUrl(client, command, { expiresIn: 60 })
-  
   return {
     statusCode: 200,
     body: url,
