@@ -8,27 +8,39 @@ import {
   CopyObjectCommand,
   DeleteObjectCommand
 } from '@aws-sdk/client-s3';
+import {
+  SQSClient,
+  SendMessageCommand
+} from '@aws-sdk/client-sqs';
 import * as csv from 'csv-parser';
 import { S3Event } from 'aws-lambda';
 
 const importFileParser = async (event: S3Event) => {
   const BUCKET = process.env.SAVED_AND_PARSED_CSV_BUCKET_NAME;
-  const client = new S3Client({ region: 'eu-west-1' });
+  const clientS3 = new S3Client({ region: 'eu-west-1' });
+  const clientSQS = new SQSClient({ region: 'eu-west-1' });
 
   for (const record of event.Records) {
-    const response = await getObjectFromS3(client, BUCKET, record.s3.object.key);
+    const response = await getObjectFromS3(clientS3, BUCKET, record.s3.object.key);
   
     response.Body
       .pipe(csv())
-      .on('data', (data) => {
+      .on('data', async (data) => {
+        data.price = +data.price;
+        data.count = +data.count;
+        const commandSQS = new SendMessageCommand({
+          QueueUrl: 'https://sqs.eu-west-1.amazonaws.com/605517339102/import-service-dev-catalogItemsQueue-17JC1KQICUZVT',
+          MessageBody: JSON.stringify(data),
+        });
+        await clientSQS.send(commandSQS);
         console.log(data);
       })
       .on('end', async () => {
         console.log(`Copy from ${BUCKET}/${record.s3.object.key}`);
       });
 
-    await copyObjectFromS3ToS3(client, BUCKET, record.s3.object.key);
-    await deleteObjectFromS3(client, BUCKET, record.s3.object.key);
+    await copyObjectFromS3ToS3(clientS3, BUCKET, record.s3.object.key);
+    await deleteObjectFromS3(clientS3, BUCKET, record.s3.object.key);
 
     console.log(`Moved into ${BUCKET}/${record.s3.object.key.replace('uploaded', 'parsed')}`);
   }
@@ -66,6 +78,10 @@ async function deleteObjectFromS3(client: S3Client, Bucket, Key) {
 
   const deleteCommand = new DeleteObjectCommand(deleteParams);
   await client.send(deleteCommand);
+}
+
+async function sendObjectToSQS() {
+
 }
 
 export const main = middyfy(importFileParser);
