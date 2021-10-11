@@ -6,7 +6,7 @@ import { Client, dbOptions } from '../../utils/libs/db';
 import { createInsertProductQuery, createInsertStockQuery } from '../../utils/queries';
 import { Product } from '../../utils/types';
 
-export const getProducts: ValidatedEventAPIGatewayProxyEvent<undefined> = async (event) => {
+export const postProduct: ValidatedEventAPIGatewayProxyEvent<undefined> = async (event) => {
   const { title, description, image_url, price, count } = event?.body as Product;
   const client = new Client(dbOptions);
   await client.connect();
@@ -34,4 +34,4 @@ export const getProducts: ValidatedEventAPIGatewayProxyEvent<undefined> = async 
   };
 }
 
-export const main = middyfy(getProducts);
+export const main = middyfy(postProduct);
